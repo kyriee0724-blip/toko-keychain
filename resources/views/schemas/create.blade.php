@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tambah Skema - Toko Keychain</title>
+    <title>Tambah Skema - Data Sertifikasi</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
@@ -14,7 +14,7 @@
             <div class="card shadow-sm">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">Tambah Skema Baru</h5>
-                    <a href="{{ route('schemas.index') }}" class="btn btn-sm btn-light">Kembali</a>
+                    <a href="{{ route('admin.schemas.index') }}" class="btn btn-sm btn-light">Kembali</a>
                 </div>
                 <div class="card-body">
 
@@ -28,7 +28,7 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('schemas.store') }}" method="POST">
+                <form action="{{ route('admin.schemas.store') }}" method="POST">
                         @csrf
 
                         <div class="mb-3">
@@ -56,7 +56,7 @@
                         </div>
 
                         <div class="d-flex justify-content-end gap-2">
-                            <a href="{{ route('schemas.index') }}" class="btn btn-secondary">Batal</a>
+                          <a href="{{ route('admin.schemas.index') }}" class="btn btn-secondary">Batal</a>
                             <button type="submit" class="btn btn-success">Simpan Skema</button>
                         </div>
                     </form>

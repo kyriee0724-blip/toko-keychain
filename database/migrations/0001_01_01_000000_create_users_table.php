@@ -41,6 +41,12 @@ return new class extends Migration
 
             // Membuat kolom created_at dan updated_at
             $table->timestamps();
+
+            // Tambahkan baris-baris ini di dalam tabel users:
+$table->string('gender')->nullable();
+$table->string('phone')->nullable();
+$table->string('nik')->nullable();
+$table->enum('role', ['admin', 'user'])->default('user');
         });
 
         // Membuat tabel password_reset_tokens

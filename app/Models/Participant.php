@@ -15,19 +15,10 @@ class Participant extends Model
 
     // Menentukan field yang boleh diisi secara massal
     protected $fillable = [
-        // ID dari skema yang diikuti peserta
         'schema_id',
-
-        // Nama peserta
         'name',
-
-        // Email peserta
         'email',
-
-        // Nomor telepon peserta
         'phone',
-
-        // Alamat peserta
         'address',
     ];
 

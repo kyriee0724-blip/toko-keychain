@@ -14,16 +14,16 @@ class DatabaseSeeder extends Seeder
     {
         // 1. Akun Login Admin
         User::create([
-            'name'     => 'Admin Keychain',
+            'name'     => 'Admin',
             'email'    => 'admin@gmail.com',
             'password' => Hash::make('sekar123'),
         ]);
 
         // 2. Data Skema Awal
         $schema1 = Schema::create([
-            'code'        => 'SKM-AKR',
-            'name'        => 'Keychain Akrilik 2 Sisi',
-            'description' => 'Gantungan kunci bahan akrilik bening.',
+            'code'        => 'SKM-01',
+            'name'        => 'Junior developer',
+            'description' => 'SKM 01 Junior developer.',
         ]);
 
         $schema2 = Schema::create([

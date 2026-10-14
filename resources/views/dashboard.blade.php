@@ -3,14 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard User - Sertifikasi Data Toko Keychain</title>
+    <title>Dashboard Peserta - Sertifikasi Data</title>
+    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="bg-light">
+<body class="bg-light d-flex flex-column min-vh-100">
 
+    <!-- Navbar Atas -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="#">🔑 Toko Keychain - User Area</a>
+            <a class="navbar-brand fw-bold" href="#">🔑 Data Sertifikasi - User Area</a>
             <form action="{{ route('logout') }}" method="POST" class="d-inline">
                 @csrf
                 <button type="submit" class="btn btn-outline-light btn-sm">Keluar (Logout)</button>
@@ -18,60 +20,105 @@
         </div>
     </nav>
 
-    <div class="container py-5">
+    <!-- Container Utama -->
+    <div class="container my-auto py-5" style="max-width: 900px;">
+        
+        <!-- Notifikasi Sukses -->
         @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
                 {{ session('success') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
 
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card border-0 shadow-sm rounded-4">
-                    <div class="card-body p-4">
-                        <h3 class="fw-bold mb-3">Profil Data Diri Saya</h3>
-                        <p class="text-muted">Selamat datang, <strong>{{ $user->name }}</strong>! Berikut adalah informasi data diri akun Anda.</p>
-                        
-                        <hr class="my-4">
+        <!-- Header Judul -->
+        <div class="mb-4">
+            <h2 class="fw-bold text-secondary">Dashboard Peserta</h2>
+            <p class="text-muted mb-0">Informasi data peserta sertifikasi Anda.</p>
+        </div>
 
-                        <div class="mb-3 row">
-                            <label class="col-sm-3 col-form-label text-muted">Nama Lengkap</label>
-                            <div class="col-sm-9">
-                                <p class="form-control-plaintext fw-bold">{{ $user->name }}</p>
-                            </div>
-                        </div>
+        <!-- Card Data Peserta -->
+        <div class="card shadow-sm border-0 rounded-3">
+            <div class="card-body p-4 p-md-5 position-relative">
+                
+                <!-- Badge Status di Pojok Kanan Atas -->
+                <div class="position-absolute top-0 end-0 m-4">
+                    <span class="badge bg-light text-secondary border px-3 py-2 fw-normal">
+                        {{ $user->status ?? 'Terdaftar' }}
+                    </span>
+                </div>
 
-                        <div class="mb-3 row">
-                            <label class="col-sm-3 col-form-label text-muted">Email</label>
-                            <div class="col-sm-9">
-                                <p class="form-control-plaintext fw-bold">{{ $user->email }}</p>
-                            </div>
-                        </div>
+                <h4 class="fw-bold mb-4 pb-2 border-bottom text-dark">Data Peserta Saya</h4>
 
-                        <div class="mb-3 row">
-                            <label class="col-sm-3 col-form-label text-muted">No. Telepon</label>
-                            <div class="col-sm-9">
-                                <p class="form-control-plaintext fw-bold">{{ $user->phone ?? '-' }}</p>
-                            </div>
-                        </div>
+                <!-- Grid Data 2 Kolom -->
+                <div class="row g-4 mb-5">
+                    <div class="col-md-6">
+                        <small class="text-muted d-block mb-1">Nama Lengkap</small>
+                        <span class="fw-semibold text-dark fs-5">{{ $user->name }}</span>
+                    </div>
 
-                        <div class="mb-3 row">
-                            <label class="col-sm-3 col-form-label text-muted">NIK</label>
-                            <div class="col-sm-9">
-                                <p class="form-control-plaintext fw-bold">{{ $user->nik ?? '-' }}</p>
-                            </div>
-                        </div>
+                    <div class="col-md-6">
+                        <small class="text-muted d-block mb-1">NIK</small>
+                        <span class="fw-semibold text-dark fs-5">{{ $user->nik ?? '-' }}</span>
+                    </div>
 
-                        <div class="d-flex justify-content-end mt-4">
-                            <a href="{{ route('profile.edit') }}" class="btn btn-warning px-4">Edit Data Diri Saya</a>
-                        </div>
+                    <div class="col-md-6">
+                        <small class="text-muted d-block mb-1">Email</small>
+                        <span class="fw-semibold text-dark">{{ $user->email }}</span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <small class="text-muted d-block mb-1">Nomor HP</small>
+                        <span class="fw-semibold text-dark">{{ $user->phone ?? '-' }}</span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <small class="text-muted d-block mb-1">Jenis Kelamin</small>
+                        <span class="fw-semibold text-dark">{{ $user->gender ?? '-' }}</span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <small class="text-muted d-block mb-1">Alamat</small>
+                        <span class="fw-semibold text-dark">{{ $user->address ?? '-' }}</span>
+                    </div>
+
+
+                    <div class="col-md-6">
+                        <small class="text-muted d-block mb-1">Kode Skema</small>
+                        <span class="fw-semibold text-dark">{{ $user->schema->code ?? '-' }}</span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <small class="text-muted d-block mb-1">Tanggal Pendaftaran</small>
+                        <span class="fw-semibold text-dark">
+                            {{ $user->created_at ? $user->created_at->format('d-m-Y') : date('d-m-Y') }}
+                        </span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <small class="text-muted d-block mb-1">Status Peserta</small>
+                        <span class="fw-semibold text-dark">{{ $user->status ?? 'Terdaftar' }}</span>
                     </div>
                 </div>
+
+                <!-- Tombol Aksi di Bawah -->
+                <div class="d-flex justify-content-end align-items-center pt-3 border-top">
+                    <a href="{{ route('profile.edit') }}" class="btn btn-primary px-4">
+                        Edit Data Saya
+                    </a>
+                </div>
+
             </div>
         </div>
+
+        <!-- Footer Hak Cipta -->
+        <footer class="text-center text-muted mt-4 small">
+            &copy; 2026 Sertifikasi App. All Rights Reserved.
+        </footer>
+
     </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

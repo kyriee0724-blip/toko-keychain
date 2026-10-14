@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - Toko Keychain</title>
+    <title>Register - Data Sertifikasi</title>
     <style>
         body { 
             font-family: Arial, sans-serif; 
@@ -59,7 +59,7 @@
 <body>
 
     <div class="register-box">
-        <h3 style="text-align: center;">Register Toko Keychain</h3>
+        <h3 style="text-align: center;">Register Data</h3>
 
         <form action="{{ route('register.store') }}" method="POST">
             @csrf

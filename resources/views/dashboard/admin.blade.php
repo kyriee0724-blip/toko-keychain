@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin - Sertifikasi Data Toko Keychain</title>
+    <title>Dashboard Admin - Sertifikasi Data</title>
     <!-- Menggunakan Bootstrap 5 untuk styling yang rapi -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -12,7 +12,7 @@
     <!-- Navbar Admin -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="#">🔑 Admin Panel - Sertifikasi Data Toko Keychain</a>
+            <a class="navbar-brand fw-bold" href="#">🔑 Admin Panel - Sertifikasi Data</a>
             <div class="d-flex align-items-center">
                 <span class="text-white me-3 small">Halo, Admin <strong>{{ $user->name }}</strong></span>
                 <form action="{{ route('logout') }}" method="POST" class="d-inline">
@@ -66,7 +66,7 @@
                     <div class="card-body">
                         <h4 class="fw-bold mb-2">Manajemen Skema</h4>
                         <p class="text-muted small">Tambah, edit, atau hapus daftar skema sertifikasi toko keychain.</p>
-                        <a href="{{ route('schemas.index') }}" class="btn btn-dark w-100">Kelola Skema</a>
+                    <a href="{{ route('admin.schemas.index') }}" class="btn btn-dark w-100">Kelola Skema</a>
                     </div>
                 </div>
             </div>
@@ -75,7 +75,7 @@
                     <div class="card-body">
                         <h4 class="fw-bold mb-2">Manajemen Peserta</h4>
                         <p class="text-muted small">Kelola data seluruh peserta, tambah peserta baru, atau hapus data.</p>
-                        <a href="{{ route('participants.index') }}" class="btn btn-dark w-100">Kelola Peserta</a>
+                        <a href="{{ route('admin.participants.index') }}" class="btn btn-dark w-100">Kelola Peserta</a>
                     </div>
                 </div>
             </div>

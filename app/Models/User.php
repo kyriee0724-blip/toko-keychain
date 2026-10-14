@@ -17,6 +17,9 @@ use Illuminate\Notifications\Notifiable;
  * @property string $email
  * @property string $phone
  * @property string $nik
+ * @property string $gender
+ * @property string $address
+ * @property int|null $schema_id
  * @property string $role
  * @property \Illuminate\Support\Carbon|null $email_verified_at
  * @property string $password
@@ -29,7 +32,7 @@ class User extends Authenticatable
     // Mengaktifkan fitur Factory dan Notifiable pada model User
     use HasFactory, Notifiable;
 
-    // Menentukan field yang boleh diisi secara massal
+    // Menentukan field yang boleh diisi secara massal (termasuk address dan schema_id)
     protected $fillable = [
         'name',
         'email',
@@ -37,16 +40,14 @@ class User extends Authenticatable
         'phone',
         'nik',
         'gender',
+        'address',
+        'schema_id',
         'role', 
     ];
 
     // Menentukan data yang tidak boleh ditampilkan atau diambil
-    // ketika data User diubah menjadi array atau JSON
     protected $hidden = [
-        // Menyembunyikan password demi keamanan
         'password',
-
-        // Menyembunyikan token untuk fitur remember me
         'remember_token',
     ];
 
@@ -54,11 +55,16 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            // Mengubah email_verified_at menjadi tipe data datetime
             'email_verified_at' => 'datetime',
-
-            // Mengubah password menjadi bentuk hash secara otomatis
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Relasi ke tabel Schema (Satu User memilih satu Skema Sertifikasi)
+     */
+    public function schema()
+    {
+        return $this->belongsTo(Schema::class);
     }
 }

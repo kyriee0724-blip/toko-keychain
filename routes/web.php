@@ -1,36 +1,67 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ParticipantController;
 use App\Http\Controllers\SchemaController;
+use App\Models\Participant;
+use App\Models\Schema;
+use Illuminate\Support\Facades\Auth;
 
+// Halaman Welcome
 Route::get('/', function () {
-    return view('welcome');
-});
+    $participants = Participant::with('schema')
+        ->latest()
+        ->paginate(10, ['*'], 'participants_page');
 
-// Auth Routes
-Route::middleware('guest')->group(function () {
-    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [AuthController::class, 'login'])->name('login.process');
-    Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-    Route::post('/register', [AuthController::class, 'register'])->name('register.store');
-});
+    $schemas = Schema::latest()
+        ->paginate(10, ['*'], 'schemas_page');
 
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+    return view('welcome', compact('participants', 'schemas'));
+})->name('welcome');
 
-// Protected Routes (Harus Login)
-Route::middleware('auth')->group(function () {
-    // Dashboard umum (bisa mengarahkan ke tampilan beda berdasarkan role)
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+// Login
+Route::get('/login', [AuthController::class, 'showLoginForm'])
+    ->name('login');
 
-    // Route khusus User biasa untuk edit profil diri sendiri
-    Route::get('/profile/edit', [ParticipantController::class, 'editProfile'])->name('profile.edit');
-    Route::put('/profile/update', [ParticipantController::class, 'updateProfile'])->name('profile.update');
+Route::post('/login', [AuthController::class, 'login'])
+    ->name('login.submit');
 
-    // Route khusus ADMIN (Skema & Manajemen Peserta Penuh)
-    Route::middleware(['admin'])->group(function () {
+// Register
+Route::get('/register', [AuthController::class, 'showRegisterForm'])
+    ->name('register');
+
+Route::post('/register', [AuthController::class, 'register'])
+    ->name('register.submit');
+
+// Logout
+Route::post('/logout', [AuthController::class, 'logout'])
+    ->middleware('auth')
+    ->name('logout');
+
+// Route khusus Admin
+Route::middleware(['auth', 'admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
         Route::resource('schemas', SchemaController::class);
         Route::resource('participants', ParticipantController::class);
     });
+
+// Route khusus User
+Route::middleware('auth')->group(function () {
+    Route::get('/user/peserta', [ParticipantController::class, 'index'])
+        ->name('user.participants.index');
+
+    Route::get('/user/skema', [SchemaController::class, 'index'])
+        ->name('user.schemas.index');
 });
+
+// Pengalihan dashboard berdasarkan role
+Route::get('/dashboard', function () {
+    if (Auth::check() && Auth::user()->role === 'admin') {
+        return redirect()->route('admin.participants.index');
+    }
+
+    return redirect()->route('user.participants.index');
+})->middleware('auth')->name('dashboard');

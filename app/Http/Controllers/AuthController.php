@@ -2,115 +2,115 @@
 
 namespace App\Http\Controllers;
 
-// Digunakan untuk menerima data dari form
 use Illuminate\Http\Request;
-
-// Digunakan untuk proses login dan logout
 use Illuminate\Support\Facades\Auth;
-
-// Import Model User (Pastikan model User sudah ada)
-use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class AuthController extends Controller
 {
-    /**
-     * Menampilkan form login
-     */
     public function showLoginForm()
     {
+        if (Auth::check()) {
+            return redirect()->route('dashboard');
+        }
+
         return view('login');
     }
 
-    /**
-     * Memproses otentikasi/login user
-     */
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'email'    => 'required|email',
+            'email' => 'required|email',
             'password' => 'required|string',
         ]);
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('/dashboard')->with('success', 'Selamat datang kembali!');
+
+            return redirect()->route('dashboard')
+                ->with('success', 'Login berhasil!');
         }
 
-        return back()->withErrors([
-            'email' => 'Email atau password yang Anda masukkan salah.',
-        ])->onlyInput('email');
+        return back()
+            ->withErrors([
+                'email' => 'Email atau password salah.',
+            ])
+            ->onlyInput('email');
     }
 
-    /**
-     * Menampilkan form register
-     */
     public function showRegisterForm()
     {
-        return view('register'); // Pastikan file view register.blade.php ada di resources/views/register.blade.php
+        return view('register');
     }
 
-    /**
-     * Memproses pendaftaran user baru
-     */
     public function register(Request $request)
     {
-        // Validasi input sesuai permintaan
         $request->validate([
-            'name'  => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'phone' => ['required', 'numeric', 'digits_between:1,11'],
-            'nik'   => ['required', 'numeric', 'digits:16'],
-            'password' => ['required', 'string', 'min:3'],
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[a-zA-Z\s]+$/',
+            ],
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                'unique:users,email',
+            ],
+            'gender' => [
+                'required',
+                'in:Laki-laki,Perempuan',
+            ],
+            'phone' => [
+                'required',
+                'numeric',
+                'digits_between:1,11',
+            ],
+            'nik' => [
+                'required',
+                'numeric',
+                'digits:16',
+            ],
+            'password' => [
+                'required',
+                'string',
+                'min:3',
+            ],
         ], [
-            // Pesan error kustom sesuai permintaan aku
-            'name.regex'           => 'Nama tidak boleh diisi angka!',
-            'phone.numeric'        => 'No telp harus berupa angka.',
-            'phone.digits_between' => 'No telp gaboleh lebih dr 11!',
-            'nik.numeric'          => 'NIK harus berupa angka.',
-            'nik.digits'           => 'Nik gaboleh lebih dan ga boleh kurang dr 16!',
+            'name.regex' => 'Nama tidak boleh diisi angka!',
+            'phone.numeric' => 'Nomor telepon harus berupa angka.',
+            'phone.digits_between' => 'Nomor telepon maksimal 11 digit.',
+            'nik.numeric' => 'NIK harus berupa angka.',
+            'nik.digits' => 'NIK harus tepat 16 digit.',
+            'gender.required' => 'Jenis kelamin harus dipilih.',
+            'gender.in' => 'Pilihan jenis kelamin tidak valid.',
         ]);
 
-        // Simpan data ke database
         User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'phone'    => $request->phone,
-            'nik'      => $request->nik,
+            'name' => $request->name,
+            'email' => $request->email,
+            'gender' => $request->gender,
+            'phone' => $request->phone,
+            'nik' => $request->nik,
             'password' => Hash::make($request->password),
-            'role'     => 'user', // Otomatis memberikan role user pada akun yang mendaftar
+            'role' => 'user',
         ]);
 
-        // Validasi data inputan termasuk gender
-    $request->validate([
-        'name'     => ['required', 'string', 'max:255'],
-        'email'    => ['required', 'string', 'email', 'max:255', 'unique:users'],
-        'password' => ['required', 'string', 'min:3'],
-        'gender'   => ['required', 'in:Laki-laki,Perempuan'], // Tambahan validasi gender
-    ]);
-
-    // Simpan data user baru ke database
-    $user = User::create([
-        'name'     => $request->name,
-        'email'    => $request->email,
-        'password' => Hash::make($request->password),
-        'gender'   => $request->gender, // Simpan gender
-        'role'     => 'user', // Default sebagai user biasa
-    ]);
-
-        // Redirect ke halaman login dengan pesan sukses
-        return redirect('/login')->with('success', 'Registrasi berhasil! Silakan login.');
+        return redirect()
+            ->route('login')
+            ->with('success', 'Registrasi berhasil! Silakan login.');
     }
 
-    /**
-     * Memproses logout user
-     */
-    public function logout(Request $request)
-    {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+   public function logout(Request $request)
+{
+    Auth::logout();
 
-        return redirect('/login')->with('success', 'Anda telah berhasil keluar dari sistem.');
-    }
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+
+    return redirect()->route('welcome');
+}
 }

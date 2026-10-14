@@ -1,32 +1,112 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sertifikasi Data</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
 
-        <title>Selamat Datang - Sertifikasi Data Toko Keychain</title>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="{{ url('/') }}">Sertifikasi Data</a>
 
-        <!-- Framework CSS Bootstrap 5 -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    </head>
-    <body class="bg-light d-flex align-items-center justify-content-center vh-100">
+        <div class="d-flex align-items-center gap-3 text-white">
+            @auth
+                <span>{{ auth()->user()->name }} ({{ auth()->user()->role }})</span>
 
-        <div class="text-center p-5 bg-white shadow-sm rounded-4" style="max-width: 600px; width: 100%;">
-            <h1 class="fw-bold text-primary mb-3">🔑 Toko Keychain</h1>
-            
-            <!-- Penjelasan Selamat Datang -->
-            <p class="text-muted mb-4 fs-5">
-                Selamat datang disini adalah web sertifikasi toko keychain. Silakan klik tombol di bawah untuk melanjutkan ke halaman login.
-            </p>
-            
-            <!-- Tombol Selanjutnya yang mengarah ke Login -->
-            <div class="d-grid gap-2 col-8 mx-auto">
-                <a href="{{ route('login') }}" class="btn btn-primary btn-lg px-4 py-2">
-                    Selanjutnya &rarr;
-                </a>
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-danger btn-sm">Logout</button>
+                </form>
+            @else
+                <a href="{{ route('login') }}" class="btn btn-outline-light btn-sm">Login</a>
+                <a href="{{ route('register') }}" class="btn btn-primary btn-sm">Daftar</a>
+            @endauth
+        </div>
+    </div>
+</nav>
+
+<div class="container py-5">
+
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    <div class="text-center mb-5">
+        <h1 class="fw-bold">Sertifikasi Data</h1>
+        <p class="text-secondary">
+            Website untuk pendataan peserta dan pengelolaan skema sertifikasi.
+        </p>
+
+        @auth
+            <h5 class="mt-4">Selamat datang, {{ auth()->user()->name }}!</h5>
+            <p>Silakan pilih menu yang ingin Anda buka.</p>
+        @else
+            <p>Silakan login untuk melihat data sertifikasi.</p>
+        @endauth
+    </div>
+
+    <div class="row g-4 justify-content-center">
+
+        <div class="col-md-5">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body p-4 text-center">
+                    <h4 class="fw-bold">Data Peserta</h4>
+                    <p class="text-secondary">
+                        Lihat informasi peserta sertifikasi yang terdaftar.
+                    </p>
+
+                    @auth
+                        <a href="{{ auth()->user()->role === 'admin'
+                            ? route('admin.participants.index')
+                            : route('user.participants.index') }}"
+                           class="btn btn-primary">
+                            Lihat Data Peserta
+                        </a>
+                    @else
+                        <a href="{{ route('login') }}" class="btn btn-primary">
+                            Login untuk Melihat Data
+                        </a>
+                    @endauth
+                </div>
             </div>
         </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    </body>
+        <div class="col-md-5">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body p-4 text-center">
+                    <h4 class="fw-bold">Skema Sertifikasi</h4>
+                    <p class="text-secondary">
+                        Lihat daftar skema sertifikasi yang tersedia.
+                    </p>
+
+                    @auth
+                        <a href="{{ auth()->user()->role === 'admin'
+                            ? route('admin.schemas.index')
+                            : route('user.schemas.index') }}"
+                           class="btn btn-success">
+                            Lihat Skema Sertifikasi
+                        </a>
+                    @else
+                        <a href="{{ route('login') }}" class="btn btn-success">
+                            Login untuk Melihat Skema
+                        </a>
+                    @endauth
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<footer class="text-center text-secondary py-4">
+    &copy; {{ date('Y') }} Sertifikasi Data
+</footer>
+
+</body>
 </html>
